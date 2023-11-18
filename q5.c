@@ -1,22 +1,51 @@
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAXSIZE 100
+
+char* addition(char* a, char* b);
 
 int main(void) {
-    unsigned long long n, k1, k2, answer;
-    unsigned long long s1, s2;
-    double sqrtN;
+    char a[MAXSIZE] = { 0 }, b[MAXSIZE] = { 0 }, n[MAXSIZE] = { 0 };
+    char* sum;
 
-    scanf("%llu", &n);
-
-    sqrtN = sqrt((double)n);
-    s1 = (unsigned long long)sqrtN;
-    s2 = s1 + 1;
-    k1 = s1 * s1;
-    k2 = s2 * s2;
-
-    answer = ((k2 - n) > (n - k1)) ? k1 : k2;
-
-    printf("%llu", answer);
+    scanf("%s", a);
+    scanf("%s", b);
+    scanf("%s", n);
+    sum = addition(a, b);
+    printf("%s", sum);
 
     return 0;
+}
+
+char* addition(char a[], char b[]) {
+    char* result;
+    char rest = 0;
+    int i, j;
+    result = (char*)malloc(sizeof(char) * MAXSIZE);
+    memset(result, 0, MAXSIZE);
+    for (i = 0; a[i]; i++)
+        ;
+    for (j = 0; b[j]; j++)
+        ;
+
+    if (i > j) {
+        for (i--, j--; j >= 0; i--, j--) {
+            result[i] = (a[i] + b[j] + rest) % 10;
+            rest = (a[i] + b[j]) / (char)10;
+        }
+        for (; i >= 0; i--) {
+            result[i] = a[i];
+        }
+    }
+    else {
+        for (i--, j--; i >= 0; i--, j--) {
+            result[j] = (a[i] + b[j] + rest) % 10;
+            rest = (char)((a[i] + b[j]) / 10);
+        }
+        for (; j >= 0; j--) {
+            result[j] = b[j];
+        }
+    }
+    return result;
 }

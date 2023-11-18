@@ -4,11 +4,17 @@
 #define DEBUG(X, Y) printf("%s (%d): %s = %d. %s = %d\n", \
                  __FUNCTION__, __LINE__, #X, X, #Y, Y)
 #define MAXSIZE 100
-#define _DEBUG_
+//#define _DEBUG_
 
 
 char* addition(char* a, char* b);
 char* division(char* sum, char* n);
+int len(char* a) {
+    int len;
+    for (len = 0; a[len]; len++)
+        ;
+    return len;
+}
 
 int main(void) {
     char a[MAXSIZE] = { 0 }, b[MAXSIZE] = { 0 }, n[MAXSIZE] = { 0 };
@@ -21,6 +27,7 @@ int main(void) {
 
     sum = addition(a, b);
     reminder = division(sum, n);
+    printf("%s", reminder);
 
     return 0;
 }
@@ -79,10 +86,40 @@ char* division(char* sum, char* n) {
     if (result == NULL) {
         return NULL;
     }
-    memset(result, 0, MAXSIZE);
+    memset(result, '0', MAXSIZE);
 
+    char* quotient;
+    quotient = (char*)malloc(sizeof(char) * MAXSIZE);
+    if (quotient == NULL) {
+        return NULL;
+    }
+    memset(quotient, '0', MAXSIZE);
 
+    char* temp;
+
+    while (len(sum) >= len(temp = addition(quotient, n)) && strcmp(sum, temp) > 0) {
+        free(temp);
+        temp = quotient;
+        quotient = addition(quotient, n);
+        free(temp);
+    }
+    free(temp);
+
+    int i;
+    for (i = 0; sum[i]; i++)
+        ;
+    i--;
+    while (strcmp(sum, (temp = addition(quotient, result)))) {
+        free(temp);
+        if (result[i] == '9') {
+            result[i--] = '0';
+            result[i]++;
+        }
+        else {
+            result[i]++;
+        }
+    }
+    free(temp);
 
     return result;
-
 }

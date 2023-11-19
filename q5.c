@@ -26,8 +26,9 @@ int main(void) {
     scanf("%s", n);
 
     sum = addition(a, b);
+    printf("%s\n", sum);
     reminder = division(sum, n);
-    printf("%s", reminder);
+    //printf("%s\n", reminder);
 
     return 0;
 }
@@ -56,7 +57,7 @@ char* addition(char* a, char* b) {
             rest = (a[i] - '0' + b[j] - '0') / 10;
         }
         for (; i >= 0; i--) {
-            result[i] = a[i] + '0';
+            result[i] = a[i];
 #ifdef _DEBUG_
             DEBUG(result[i], i);
 #endif
@@ -71,7 +72,7 @@ char* addition(char* a, char* b) {
             rest = (a[i] - '0' + b[j] - '0') / 10;
         }
         for (; j >= 0; j--) {
-            result[j] = b[j] + '0';
+            result[j] = b[j];
 #ifdef _DEBUG_
             DEBUG(result[j], j);
 #endif
@@ -86,21 +87,19 @@ char* division(char* sum, char* n) {
     if (result == NULL) {
         return NULL;
     }
-    memset(result, '0', MAXSIZE);
+    memset(result, 0, MAXSIZE);
 
     char* quotient;
     quotient = (char*)malloc(sizeof(char) * MAXSIZE);
     if (quotient == NULL) {
         return NULL;
     }
-    memset(quotient, '0', MAXSIZE);
+    memset(quotient, 0, MAXSIZE);
 
     char* temp;
 
-    while (len(sum) >= len(temp = addition(quotient, n)) && strcmp(sum, temp) > 0) {
-        free(temp);
-        temp = quotient;
-        quotient = addition(quotient, n);
+    while (len(sum) >= len(temp = addition(quotient, n)) || strcmp(sum, quotient) > 0) {
+        strcpy(quotient, temp);
         free(temp);
     }
     free(temp);
@@ -108,6 +107,7 @@ char* division(char* sum, char* n) {
     int i;
     for (i = 0; sum[i]; i++)
         ;
+
     i--;
     while (strcmp(sum, (temp = addition(quotient, result)))) {
         free(temp);
